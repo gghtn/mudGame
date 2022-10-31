@@ -1,17 +1,23 @@
 #include "monster.h"
 
-string CMonster::Attack(CObject* pObject) {
+void CMonster::Init(string name, int weight, int status, int exp, int gold, int item) {
+	int level = rand() % 10 + weight;
+	SetName(name);
+	SetLevel(level);
+	SetMaxHP(100 * level);
+	SetHP(GetMaxHP());
+	SetSTR(rand() % 10 + status + level);
+	SetDEX(rand() % 10 + status + level);
+	SetDEF(rand() % 10 + status + level);
+	SetMonsterInfo(exp + level * 10, gold + level * 10, item);
+}
+
+string CMonster::Attack(CObject* pUser) {
 	char result[100];
 	int damage, avoid;
 	float weight;
 
-	weight = (float)GetLevel() - pObject->GetLevel();
-	if (weight < -20 && weight > -100) weight = 1.0f + (weight / 100);
-	else if (weight < -100) weight = 0.0f;
-	else if (weight > 20) weight = 1.0f + (weight / 100);
-	else weight = 1.0f;
-
-	avoid = pObject->GetDEX() + pObject->GetLevel() - GetLevel();
+	avoid = pUser->GetDEX() + pUser->GetLevel() - GetLevel();
 	if (avoid <= 0) avoid = 0;
 	else {
 		if (rand() % 10 < avoid / 10) avoid = 1;
@@ -20,15 +26,16 @@ string CMonster::Attack(CObject* pObject) {
 
 	if (avoid) damage = 0;
 	else {
-		damage = int((((rand() % 50 + 10) * GetSTR()) / pObject->GetDEF()) * weight);
+		weight = LevelWeight(pUser);
+		damage = int((((rand() % 10 + 20) * GetSTR()) / pUser->GetDEF()) * weight);
 	}
 
-	pObject->SetDamage(damage);
+	pUser->SetDamage(damage);
 	if (damage == 0)
 		sprintf(result, "%s의 공격을 회피했습니다!", GetName());
-	else if (pObject->GetLive())
+	else if (pUser->GetLive())
 		sprintf(result, "%s의 공격으로 %d만큼의 피해를 입었습니다!", GetName(), damage);
-	else sprintf(result, "%s의 공격으로 %s이(가) 죽었습니다!", GetName(), pObject->GetName());
+	else sprintf(result, "%s의 공격으로 %s이(가) 죽었습니다!", GetName(), pUser->GetName());
 
 	return result;
 }
