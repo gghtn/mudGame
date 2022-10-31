@@ -1,8 +1,16 @@
 #pragma once
 
 enum {
-	TRIPLE_ATTACK = 0x01,
-	TRUE_ATTACK = 0x02,
-	WIDE_IMPACT = 0x04,
-	AURA_BLADE = 0x08
+	TRIPLE_ATTACK = 10,
+	RECOVERY = 3,
+	TRUE_ATTACK = 30,
+	AURA_BLADE = 300
+};
+
+//mp¼Ò¸ð·®
+enum {
+	TRIPLE_ATTACK_MP = 50,
+	RECOVERY_MP = 1,
+	TRUE_ATTACK_MP = 2,
+	AURA_BLADE_MP = 3
 };
